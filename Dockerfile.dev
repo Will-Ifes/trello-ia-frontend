@@ -1,0 +1,24 @@
+# Etapa base de desenvolvimento
+FROM node:23-alpine
+
+# Instala ferramentas básicas
+RUN apk add --no-cache curl bash
+
+# Ativa Corepack + pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Define diretório de trabalho
+WORKDIR /app
+
+# Copia apenas os arquivos de dependências primeiro (cache eficiente)
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install
+
+# Copia o restante do projeto
+COPY . .
+
+# Porta usada na dev
+EXPOSE 3030
+
+# Define ambiente e comando
+CMD ["pnpm", "dev"]

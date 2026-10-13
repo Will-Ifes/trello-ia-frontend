@@ -1,0 +1,20 @@
+services:
+  frontend:
+    container_name: trelloia-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3030:3030'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env.local
+    command: pnpm dev
+    networks:
+      - trelloia-shared
+
+networks:
+  trelloia-shared:
+    external: true
