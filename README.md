@@ -38,4 +38,4 @@ pnpm build
 - [Roadmap](docs/roadmap.md)
 - [Funcionalidades de IA planejadas](docs/ai-features.md)
 
-Versão de portfólio baseada no [projeto original de Wildemberg de Jesus Oliveira](https://github.com/Wildemberg-otus7/trello.ia-frontend). Foi criada com histórico novo para não reproduzir dados de configuração presentes no projeto original associado. Esta cópia ainda não foi validada em execução após a migração.
+Projeto pessoal iniciado em 2025 e trazido para este perfil em uma cópia revisada. O histórico desta cópia começa na migração; o desenvolvimento original ocorreu em outra conta GitHub. A execução após a migração ainda não foi validada.
