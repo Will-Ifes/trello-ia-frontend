@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./.github/readme-cover.svg" alt="Trello.ia | experiência: Identidade do usuário e base de organização." width="100%" />
+</p>
+
 # Trello.ia · Frontend
 
 Interface de uma aplicação de organização de tarefas, começando pela autenticação e pelo dashboard.
@@ -5,6 +9,13 @@ Interface de uma aplicação de organização de tarefas, começando pela autent
 **Next.js · React · TypeScript · Tailwind CSS**
 
 [Backend](https://github.com/Will-Ifes/trello-ia-backend) · [Código](src) · [Execução](#executar)
+
+## Explore o diferencial
+
+| Ponto de entrada | O que observar |
+| --- | --- |
+| [Uma feature de ponta a ponta](src/features/auth) | Formulários, validação e ações de autenticação ficam no mesmo domínio. |
+| [Comportamento sob teste](src/features/auth/__tests__/Login.spec.tsx) | Os testes de login permitem observar as expectativas da interface. |
 
 ## Destaques
 
@@ -52,13 +63,13 @@ src/
 
 ### Tecnologias
 
-- **Next.js 15, React 19 e TypeScript** — aplicação com App Router.
-- **Tailwind CSS** — estilos e responsividade.
-- **React Hook Form + Yup** — formulários e validação.
-- **Redux Toolkit** — estado inicial dos quadros.
-- **Jest + Testing Library** — testes de interface e estado.
-- **Docker, ESLint e Prettier** — ambiente de desenvolvimento e qualidade de código.
-- **SWR** — disponível nas dependências para evolução da camada de dados.
+- **Next.js 15, React 19 e TypeScript** · aplicação com App Router.
+- **Tailwind CSS** · estilos e responsividade.
+- **React Hook Form + Yup** · formulários e validação.
+- **Redux Toolkit** · estado inicial dos quadros.
+- **Jest + Testing Library** · testes de interface e estado.
+- **Docker, ESLint e Prettier** · ambiente de desenvolvimento e qualidade de código.
+- **SWR** · disponível nas dependências para evolução da camada de dados.
 
 </details>
 
@@ -109,14 +120,11 @@ Os quadros do dashboard são dados de demonstração. O fluxo completo de tarefa
 - Integração das funcionalidades de tarefas com o backend.
 - Recursos de IA para apoio à organização e produtividade.
 
-
-
 ### Colaboração e licença
 
 Sugestões podem ser enviadas por issue ou pull request. O projeto ainda não possui licença definida; consulte o autor antes de reutilizar o código fora das permissões padrão do GitHub.
 
 Desenvolvido por **Wildemberg de Jesus Oliveira (Will)** · [LinkedIn](https://www.linkedin.com/in/wildemberg-de-jesus-oliveira/)  
 Projeto iniciado em 2025 em outra conta GitHub e reunido neste perfil em uma cópia revisada.
-
 
 </details>
