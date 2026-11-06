@@ -1,41 +1,70 @@
-# Trello.ia — Frontend
+<p align="center">
+  <img src="./.github/readme-cover.svg" alt="Trello.ia: ideias em movimento, quadros e tarefas com inteligência." width="100%" />
+</p>
 
-Kanban pessoal com Next.js, React, TypeScript e Tailwind. Usa o [backend NestJS](https://github.com/Will-Ifes/trello-ia-backend) para autenticação, persistência e IA.
+# Trello.ia · ideias em movimento
 
-## Funcionalidades do MVP
+Um espaço pessoal para tirar projetos do papel: organize quadros, distribua tarefas entre etapas e acompanhe o que já foi feito. A recuperação completa a integração com a API e acrescenta persistência, autorização por usuário e geração de planos com IA.
 
-- Cadastro, login, recuperação de senha e proteção das páginas privadas.
-- Dashboard com dados reais, busca de quadros e contagem de tarefas.
-- Criação, edição e exclusão de quadros, listas e cartões.
-- Descrição, prazo e conclusão de tarefas; movimentação por arrastar ou seletor acessível.
-- Visão de todas as tarefas, perfil e criação de quadros com IA configurada no backend.
-- Layout responsivo, estados vazios, mensagens de erro, confirmação de exclusão e sessão HTTP-only.
+**Next.js 15 · React 19 · TypeScript · Tailwind CSS**
 
-## Executar
+[![Verificações](https://github.com/Will-Ifes/trello-ia-frontend/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Will-Ifes/trello-ia-frontend/actions/workflows/ci.yml)
 
-Requer Node.js 24 e pnpm 11.25.0. Primeiro inicie o backend e seu PostgreSQL conforme o README dele.
+[Backend](https://github.com/Will-Ifes/trello-ia-backend) · [Código](src) · [Executar](#executar-com-api) · [Publicação](docs/deploy.md)
+
+<p align="center">
+  <img src="./.github/demo.png" alt="Captura real do Kanban: quatro listas, cartão concluído, prazo e seleção de destino." width="960" />
+  <br />
+  <sub>Interface real, validada em desktop e mobile. Dados fictícios usados nos testes.</sub>
+</p>
+
+## O que dá para fazer
+
+- Criar uma conta, entrar e acessar somente os próprios projetos.
+- Criar, editar, buscar e excluir quadros.
+- Adicionar e renomear listas; criar cartões com descrição e prazo.
+- Mover cartões por arrastar ou pelo seletor de destino, marcar conclusão e acompanhar o progresso.
+- Consultar tarefas de todos os quadros em uma única tela.
+- Gerar quadros com etapas e tarefas pela IA, quando configurada no backend.
+
+O produto usa banco PostgreSQL e sessão HTTP-only. A criação manual funciona sem chave de IA; recuperação de senha por e-mail depende da configuração do remetente na API.
+
+## Da base inicial ao MVP
+
+| Antes                                          | Agora                                                |
+| ---------------------------------------------- | ---------------------------------------------------- |
+| Dashboard com três quadros de exemplo          | Quadros reais vinculados ao usuário                  |
+| Navegação com páginas ausentes                 | Fluxos de quadros, tarefas, perfil e IA              |
+| Estado local sem persistência na API           | Quadros, listas e cartões no PostgreSQL              |
+| Cadastro e login com configurações divergentes | Ações no servidor e ponte de API no mesmo domínio    |
+| Cookie inválido podia causar redirecionamentos | Páginas privadas e cache isolado por sessão          |
+| IA apenas no roadmap                           | Geração com provedor configurado e resposta validada |
+
+## Arquitetura
+
+O navegador acessa o Next.js. As ações de autenticação e a ponte `/api/*` encaminham as chamadas para o NestJS; chaves de IA e conexão do banco ficam no servidor.
+
+| Caminho                                        | Responsabilidade                                 |
+| ---------------------------------------------- | ------------------------------------------------ |
+| [Workspace](src/features/boards/Workspace.tsx) | Dashboard, Kanban e formulários                  |
+| [Autenticação](src/features/auth)              | Formulários, validação e ações                   |
+| [Páginas privadas](<src/app/(protected)>)      | Verificação de sessão                            |
+| [Ponte da API](src/app/api)                    | Rotas permitidas, cookie e verificação de origem |
+| [Testes de navegador](e2e/workspace.spec.ts)   | Percurso real em desktop e mobile                |
+
+## Executar com API
+
+Requer **Node.js 24** e **pnpm 11.25.0**. Clone os dois repositórios em pastas irmãs e inicie o banco/API conforme o [README do backend](https://github.com/Will-Ifes/trello-ia-backend).
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Abra [localhost:3030](http://localhost:3030), crie uma conta e entre. A API padrão é `http://localhost:3000`. Para alterá-la, copie `.env.example` para `.env.local` e defina `API_INTERNAL_URL`.
+Abra [localhost:3030](http://localhost:3030). A API padrão é `http://localhost:3000`; para alterá-la, copie `.env.example` para `.env.local` e defina `API_INTERNAL_URL`.
 
-O navegador chama `/api/*` no próprio frontend. O servidor Next encaminha apenas as rotas de produto permitidas e o cookie HTTP-only para a API. Não é necessário configurar `NEXT_PUBLIC_API_URL` nem expor a chave de IA ao cliente.
-
-## Produção e Docker
-
-```sh
-pnpm build
-pnpm start
-```
-
-Em HTTPS, cookies seguros são habilitados por padrão. Para testar uma build de produção em HTTP local, defina explicitamente `COOKIE_SECURE=false`; em produção pública use `COOKIE_SECURE=true`.
-
-O `compose.yaml` do backend sobe os dois repositórios e o banco em um único comando quando eles estão em pastas irmãs. A imagem usa o modo standalone do Next. Consulte [o README da API](https://github.com/Will-Ifes/trello-ia-backend) para a configuração completa.
-
-## Verificação
+<details>
+<summary><strong>Testes, produção e configuração</strong></summary>
 
 ```sh
 pnpm lint
@@ -45,27 +74,34 @@ pnpm build
 pnpm audit --prod
 ```
 
-Com frontend e backend locais rodando, e IA sem credenciais reais:
+Com os serviços locais em execução:
 
 ```sh
 pnpm exec playwright install chromium
 pnpm test:e2e
 ```
 
-Os testes de navegador criam contas fictícias em `example.com`, usam e excluem quadros próprios, verificam desktop e mobile, e geram capturas em `test-results/`. Use um ambiente de testes, separado de produção. Os testes não enviam e-mails nem chamam um modelo pago. A CI verifica lint, testes de componentes, build e auditoria.
+Foram aprovados 18 testes Jest e dois percursos Playwright, em desktop e mobile, incluindo a build de produção. A CI valida lint, testes, build e dependências de produção.
 
-## Organização
+`pnpm build` e `pnpm start` executam a versão de produção na porta 3030. Cookies seguros são padrão em HTTPS; `COOKIE_SECURE=false` serve apenas para teste de produção em HTTP local. O Docker Compose conjunto fica no backend; a execução em contêineres ainda não foi validada nesta recuperação.
 
-- `src/features/auth`: formulários, ações de servidor e cache da sessão.
-- `src/features/boards`: interface Kanban, tipos e cliente da API.
-- `src/app/(protected)`: páginas com autenticação obrigatória.
-- `src/app/api/[...path]`: ponte entre navegador e API.
-- `e2e`: testes Playwright de uso real.
+A publicação está preparada para Vercel Hobby com a API e PostgreSQL Neon Free. O endereço público será acrescentado após o deploy e sua validação. Veja o [roteiro de publicação](docs/deploy.md).
 
-## Configuração externa e limites
+</details>
 
-A criação manual funciona sem IA. Para habilitar geração, configure `OPENROUTER_API_KEY` e `OPENROUTER_MODEL` no backend. A recuperação real depende da configuração de e-mail da API.
+<details>
+<summary><strong>Limites, documentação e créditos</strong></summary>
 
-Este MVP atende uso pessoal. Colaboração, convites, anexos, checklists, tarefas recorrentes, chat com IA e integrações externas seguem fora do escopo implementado. OAuth com Google não está disponível; os botões de demonstração foram removidos.
+Este MVP é pessoal. Convites, colaboração em tempo real, anexos, checklists, reordenação dentro da mesma lista e rotinas recorrentes seguem como evolução. OAuth com Google não está disponível.
 
-Projeto de **Wildemberg de Jesus Oliveira (Will)**. Sem licença de reutilização definida.
+- [Ambiente](docs/environment.md)
+- [Testes](docs/testing.md)
+- [Docker](docs/docker.md)
+- [Roadmap](docs/roadmap.md)
+- [IA](docs/ai-features.md)
+
+Desenvolvido por **Wildemberg de Jesus Oliveira (Will)** · [LinkedIn](https://www.linkedin.com/in/wildemberg-de-jesus-oliveira/)
+
+Projeto iniciado em 2025, recuperado e integrado em 2026. Sem licença de reutilização definida.
+
+</details>
