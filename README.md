@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./.github/readme-cover.svg" alt="Trello.ia: ideias em movimento, quadros e tarefas com inteligência." width="100%" />
+  <a href="https://trello-ia-frontend-five.vercel.app"><img src="./.github/readme-cover.svg" alt="Trello.ia: ideias em movimento, quadros e tarefas com inteligência." width="100%" /></a>
 </p>
 
 # Trello.ia · ideias em movimento
@@ -10,10 +10,10 @@ Um espaço pessoal para tirar projetos do papel: organize quadros, distribua tar
 
 [![Verificações](https://github.com/Will-Ifes/trello-ia-frontend/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Will-Ifes/trello-ia-frontend/actions/workflows/ci.yml)
 
-[Backend](https://github.com/Will-Ifes/trello-ia-backend) · [Código](src) · [Executar](#executar-com-api) · [Publicação](docs/deploy.md)
+[Ver online](https://trello-ia-frontend-five.vercel.app) · [Backend](https://github.com/Will-Ifes/trello-ia-backend) · [Código](src) · [Executar](#executar-com-api) · [Publicação](docs/deploy.md)
 
 <p align="center">
-  <img src="./.github/demo.png" alt="Captura real do Kanban: quatro listas, cartão concluído, prazo e seleção de destino." width="960" />
+  <a href="https://trello-ia-frontend-five.vercel.app"><img src="./.github/demo.png" alt="Captura real do Kanban: quatro listas, cartão concluído, prazo e seleção de destino." width="960" /></a>
   <br />
   <sub>Interface real, validada em desktop e mobile. Dados fictícios usados nos testes.</sub>
 </p>
@@ -85,7 +85,7 @@ Foram aprovados 18 testes Jest e dois percursos Playwright, em desktop e mobile,
 
 `pnpm build` e `pnpm start` executam a versão de produção na porta 3030. Cookies seguros são padrão em HTTPS; `COOKIE_SECURE=false` serve apenas para teste de produção em HTTP local. O Docker Compose conjunto fica no backend; a execução em contêineres ainda não foi validada nesta recuperação.
 
-A publicação está preparada para Vercel Hobby com a API e PostgreSQL Neon Free. O endereço público será acrescentado após o deploy e sua validação. Veja o [roteiro de publicação](docs/deploy.md).
+Frontend e API publicados na Vercel Hobby, com PostgreSQL Neon Free. [Abra o aplicativo](https://trello-ia-frontend-five.vercel.app) e crie uma conta. Os fluxos de cadastro, login e Kanban foram validados na hospedagem em desktop e mobile. Veja o [roteiro de publicação](docs/deploy.md).
 
 </details>
 
