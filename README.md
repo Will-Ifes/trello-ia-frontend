@@ -25,7 +25,7 @@ Um espaço pessoal para tirar projetos do papel: organize quadros, distribua tar
 - Adicionar e renomear listas; criar cartões com descrição e prazo.
 - Mover cartões por arrastar ou pelo seletor de destino, marcar conclusão e acompanhar o progresso.
 - Consultar tarefas de todos os quadros em uma única tela.
-- Gerar quadros com etapas e tarefas pela IA, quando configurada no backend.
+- Gerar quadros com etapas e tarefas pela Groq (cota gratuita), com chave privada no backend e limite diário por conta.
 
 O produto usa banco PostgreSQL e sessão HTTP-only. A criação manual funciona sem chave de IA; recuperação de senha por e-mail depende da configuração do remetente na API.
 

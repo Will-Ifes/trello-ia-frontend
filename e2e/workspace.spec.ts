@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('cadastro, login, Kanban persistido, IA indisponível e logout', async ({ page }, info) => {
+test('cadastro, login, Kanban persistido, status da IA e logout', async ({ page }, info) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   const email = `ui-test-${Date.now()}-${info.project.name}@example.com`;
@@ -69,8 +69,30 @@ test('cadastro, login, Kanban persistido, IA indisponível e logout', async ({ p
   await expect(page.getByText('Validar o MVP', { exact: true })).toBeVisible();
   await page.getByRole('link', { name: 'Criar com IA', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Da ideia ao plano de ação.' })).toBeVisible();
-  // Local validation does not require a paid AI credential.
-  await expect(page.getByRole('button', { name: 'Gerar quadro com IA' })).toBeDisabled();
+  // Inspect availability without spending the provider's free quota.
+  const aiStatus = await (await page.request.get('/api/ai/status')).json();
+  if (aiStatus.available)
+    await expect(page.getByRole('button', { name: 'Gerar quadro com IA' })).toBeEnabled();
+  else await expect(page.getByRole('button', { name: 'Gerar quadro com IA' })).toBeDisabled();
+  // Exercise the UI without real provider traffic. Persistence is tested in the API suite.
+  await page.route('**/api/ai/status', (route) =>
+    route.fulfill({ json: { available: true, provider: 'Groq', dailyLimit: 5 } }),
+  );
+  await page.reload();
+  await page.getByLabel('O que você quer organizar?').fill('Preparar uma feira de livros');
+  await page.route('**/api/ai/boards', (route) =>
+    route.fulfill({ status: 429, json: { message: 'A cota gratuita da IA está ocupada.' } }),
+  );
+  await page.getByRole('button', { name: 'Gerar quadro com IA' }).click();
+  await expect(page.getByText('A cota gratuita da IA está ocupada.')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Gerar quadro com IA' })).toBeEnabled();
+  await page.unroute('**/api/ai/boards');
+  await page.route('**/api/ai/boards', async (route) => {
+    expect(route.request().postDataJSON()).toEqual({ prompt: 'Preparar uma feira de livros' });
+    await route.fulfill({ status: 201, json: { id: boardUrl.split('/').pop() } });
+  });
+  await page.getByRole('button', { name: 'Gerar quadro com IA' }).click();
+  await expect(page).toHaveURL(boardUrl);
   await page.goto(boardUrl);
   await page.getByRole('button', { name: 'Excluir', exact: true }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Excluir', exact: true }).click();

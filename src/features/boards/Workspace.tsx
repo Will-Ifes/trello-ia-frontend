@@ -597,7 +597,12 @@ export function Workspace({
                 onChange={(e) => setAiPrompt(e.target.value)}
               />
               <p className="text-xs text-slate-500">
-                Seu texto será enviado ao provedor de IA configurado. Evite incluir dados sensíveis.
+                Somente o texto acima será enviado à Groq. Seus outros quadros e dados da conta não
+                são enviados. Evite incluir dados sensíveis.
+              </p>
+              <p className="text-xs text-slate-500">
+                Até 5 tentativas por conta por dia (UTC), sujeitas à cota gratuita da Groq. Revise
+                as tarefas antes de executá-las.
               </p>
               {ai && !ai.available && (
                 <p role="status" className="rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
