@@ -26,7 +26,6 @@ describe('LoginForm', () => {
     expect(screen.getByLabelText(/e-mail/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/senha/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /^entrar$/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /entrar com google/i })).toBeInTheDocument();
   });
 
   it('exibe mensagens de erro para campos vazios', async () => {

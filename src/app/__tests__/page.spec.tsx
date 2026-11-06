@@ -41,7 +41,12 @@ describe('Home page', () => {
 
   it('exibe o rodapé com o nome e ano', () => {
     expect(
-      screen.getByText(/© 2025 Trello\.ia\. Todos os direitos reservados\./i),
+      screen.getByText(
+        new RegExp(
+          `© ${new Date().getFullYear()} Trello\\.ia\\. Todos os direitos reservados\\.`,
+          'i',
+        ),
+      ),
     ).toBeInTheDocument();
   });
 });

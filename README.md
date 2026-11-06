@@ -1,130 +1,107 @@
 <p align="center">
-  <img src="./.github/readme-cover.svg" alt="Trello.ia | experiência: Identidade do usuário e base de organização." width="100%" />
+  <img src="./.github/readme-cover.svg" alt="Trello.ia: ideias em movimento, quadros e tarefas com inteligência." width="100%" />
 </p>
 
-# Trello.ia · Frontend
+# Trello.ia · ideias em movimento
 
-Interface de uma aplicação de organização de tarefas, começando pela autenticação e pelo dashboard.
+Um espaço pessoal para tirar projetos do papel: organize quadros, distribua tarefas entre etapas e acompanhe o que já foi feito. A recuperação completa a integração com a API e acrescenta persistência, autorização por usuário e geração de planos com IA.
 
-**Next.js · React · TypeScript · Tailwind CSS**
+**Next.js 15 · React 19 · TypeScript · Tailwind CSS**
 
-[Backend](https://github.com/Will-Ifes/trello-ia-backend) · [Código](src) · [Execução](#executar)
+[![Verificações](https://github.com/Will-Ifes/trello-ia-frontend/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Will-Ifes/trello-ia-frontend/actions/workflows/ci.yml)
 
-## Explore o diferencial
+[Backend](https://github.com/Will-Ifes/trello-ia-backend) · [Código](src) · [Executar](#executar-com-api) · [Publicação](docs/deploy.md)
 
-| Ponto de entrada | O que observar |
-| --- | --- |
-| [Uma feature de ponta a ponta](src/features/auth) | Formulários, validação e ações de autenticação ficam no mesmo domínio. |
-| [Comportamento sob teste](src/features/auth/__tests__/Login.spec.tsx) | Os testes de login permitem observar as expectativas da interface. |
+<p align="center">
+  <img src="./.github/demo.png" alt="Captura real do Kanban: quatro listas, cartão concluído, prazo e seleção de destino." width="960" />
+  <br />
+  <sub>Interface real, validada em desktop e mobile. Dados fictícios usados nos testes.</sub>
+</p>
 
-## Destaques
+## O que dá para fazer
 
-- Telas de cadastro, login, recuperação e redefinição de senha.
-- Validação de formulários e mensagens de erro.
-- Integração das ações de autenticação com a API.
-- Estrutura do dashboard, navegação responsiva e componentes reutilizáveis.
-- Estado inicial de boards e testes de componentes e Redux.
+- Criar uma conta, entrar e acessar somente os próprios projetos.
+- Criar, editar, buscar e excluir quadros.
+- Adicionar e renomear listas; criar cartões com descrição e prazo.
+- Mover cartões por arrastar ou pelo seletor de destino, marcar conclusão e acompanhar o progresso.
+- Consultar tarefas de todos os quadros em uma única tela.
+- Gerar quadros com etapas e tarefas pela IA, quando configurada no backend.
 
-> **Em desenvolvimento:** o dashboard utiliza quadros de exemplo; quadros, listas, cards e IA ainda fazem parte do roadmap.
+O produto usa banco PostgreSQL e sessão HTTP-only. A criação manual funciona sem chave de IA; recuperação de senha por e-mail depende da configuração do remetente na API.
 
-<details>
-<summary><strong>Arquitetura e código</strong></summary>
+## Da base inicial ao MVP
 
-### Decisões
+| Antes                                          | Agora                                                |
+| ---------------------------------------------- | ---------------------------------------------------- |
+| Dashboard com três quadros de exemplo          | Quadros reais vinculados ao usuário                  |
+| Navegação com páginas ausentes                 | Fluxos de quadros, tarefas, perfil e IA              |
+| Estado local sem persistência na API           | Quadros, listas e cartões no PostgreSQL              |
+| Cadastro e login com configurações divergentes | Ações no servidor e ponte de API no mesmo domínio    |
+| Cookie inválido podia causar redirecionamentos | Páginas privadas e cache isolado por sessão          |
+| IA apenas no roadmap                           | Geração com provedor configurado e resposta validada |
 
-O projeto explora a construção de um produto de organização de tarefas, começando pelo acesso do usuário e pela estrutura da aplicação. A separação por `features` reúne formulários, ações e validação do mesmo domínio.
+## Arquitetura
 
-- **App Router e ações no servidor:** chamadas de autenticação ficam próximas do fluxo que as utiliza.
-- **Componentes compartilhados:** navegação e primitivas da UI são separados das funcionalidades.
-- **Estado de boards:** o slice do Redux representa uma base local; não substitui persistência na API.
+O navegador acessa o Next.js. As ações de autenticação e a ponte `/api/*` encaminham as chamadas para o NestJS; chaves de IA e conexão do banco ficam no servidor.
 
-### Caminhos de leitura
+| Caminho                                        | Responsabilidade                                 |
+| ---------------------------------------------- | ------------------------------------------------ |
+| [Workspace](src/features/boards/Workspace.tsx) | Dashboard, Kanban e formulários                  |
+| [Autenticação](src/features/auth)              | Formulários, validação e ações                   |
+| [Páginas privadas](<src/app/(protected)>)      | Verificação de sessão                            |
+| [Ponte da API](src/app/api)                    | Rotas permitidas, cookie e verificação de origem |
+| [Testes de navegador](e2e/workspace.spec.ts)   | Percurso real em desktop e mobile                |
 
-| Arquivo | O que observar |
-| --- | --- |
-| [Login e integração](src/features/auth/actions/login.ts) | Chamada à API, leitura do cookie e redirecionamento |
-| [Validação do login](src/features/auth/validation/login.schema.ts) | Contrato do formulário |
-| [Dashboard](src/features/dashboard/DashboardView.tsx) | Composição e quadros de exemplo |
-| [Estado dos boards](src/features/boards/boardSlice.ts) | Operações locais de inclusão e remoção |
-| [Testes do login](src/features/auth/__tests__/Login.spec.tsx) | Exemplos de testes de interface |
+## Executar com API
 
-### Organização
+Requer **Node.js 24** e **pnpm 11.25.0**. Clone os dois repositórios em pastas irmãs e inicie o banco/API conforme o [README do backend](https://github.com/Will-Ifes/trello-ia-backend).
 
-```text
-src/
-├── app/          # Rotas, layouts e páginas do Next.js
-├── components/   # Componentes de interface e navegação
-├── features/     # Autenticação, dashboard e estado dos boards
-├── hooks/        # Hooks reutilizáveis
-├── lib/          # Utilitários e acesso ao usuário atual
-├── store/        # Configuração do Redux
-└── types/        # Tipos compartilhados
-```
-
-### Tecnologias
-
-- **Next.js 15, React 19 e TypeScript** · aplicação com App Router.
-- **Tailwind CSS** · estilos e responsividade.
-- **React Hook Form + Yup** · formulários e validação.
-- **Redux Toolkit** · estado inicial dos quadros.
-- **Jest + Testing Library** · testes de interface e estado.
-- **Docker, ESLint e Prettier** · ambiente de desenvolvimento e qualidade de código.
-- **SWR** · disponível nas dependências para evolução da camada de dados.
-
-</details>
-
-<a id="executar"></a>
-
-<details>
-<summary><strong>Executar, testar e configurar</strong></summary>
-
-Requer Node.js e pnpm. Com o [backend](https://github.com/Will-Ifes/trello-ia-backend) configurado, defina `API_INTERNAL_URL` no seu ambiente para as ações de autenticação apontarem para a API.
-
-```bash
-pnpm install
+```sh
+pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-A aplicação roda em `http://localhost:3030`. Veja os detalhes em [configuração de ambiente](docs/environment.md) e [Docker](docs/docker.md).
+Abra [localhost:3030](http://localhost:3030). A API padrão é `http://localhost:3000`; para alterá-la, copie `.env.example` para `.env.local` e defina `API_INTERNAL_URL`.
 
-### Scripts disponíveis
+<details>
+<summary><strong>Testes, produção e configuração</strong></summary>
 
-| Comando | Finalidade |
-| --- | --- |
-| `pnpm dev` | Inicia o servidor de desenvolvimento na porta 3030 |
-| `pnpm build` | Gera a build de produção |
-| `pnpm start` | Inicia a build de produção |
-| `pnpm test` | Executa os testes |
-| `pnpm test:coverage` | Executa os testes com cobertura |
-| `pnpm lint` | Verifica o código com ESLint |
+```sh
+pnpm lint
+pnpm typecheck
+pnpm test --runInBand --coverage=false
+pnpm build
+pnpm audit --prod
+```
 
-### Pontos de atenção
+Com os serviços locais em execução:
 
-Os quadros do dashboard são dados de demonstração. O fluxo completo de tarefas e os recursos de IA ainda não estão disponíveis. A autenticação usa cookies com `secure: true`; o transporte e a configuração de cookies precisam ser compatíveis com seu ambiente local. Os comandos e testes estão versionados, mas este README não declara aprovação atual de toda a suíte.
+```sh
+pnpm exec playwright install chromium
+pnpm test:e2e
+```
+
+Foram aprovados 18 testes Jest e dois percursos Playwright, em desktop e mobile, incluindo a build de produção. A CI valida lint, testes, build e dependências de produção.
+
+`pnpm build` e `pnpm start` executam a versão de produção na porta 3030. Cookies seguros são padrão em HTTPS; `COOKIE_SECURE=false` serve apenas para teste de produção em HTTP local. O Docker Compose conjunto fica no backend; a execução em contêineres ainda não foi validada nesta recuperação.
+
+A publicação está preparada para Vercel Hobby com a API e PostgreSQL Neon Free. O endereço público será acrescentado após o deploy e sua validação. Veja o [roteiro de publicação](docs/deploy.md).
 
 </details>
 
 <details>
-<summary><strong>Documentação, evolução e créditos</strong></summary>
+<summary><strong>Limites, documentação e créditos</strong></summary>
 
-- [Estrutura de pastas](docs/structure.md)
+Este MVP é pessoal. Convites, colaboração em tempo real, anexos, checklists, reordenação dentro da mesma lista e rotinas recorrentes seguem como evolução. OAuth com Google não está disponível.
+
 - [Ambiente](docs/environment.md)
-- [Docker](docs/docker.md)
 - [Testes](docs/testing.md)
+- [Docker](docs/docker.md)
 - [Roadmap](docs/roadmap.md)
-- [Funcionalidades de IA planejadas](docs/ai-features.md) 
+- [IA](docs/ai-features.md)
 
-### Evolução
+Desenvolvido por **Wildemberg de Jesus Oliveira (Will)** · [LinkedIn](https://www.linkedin.com/in/wildemberg-de-jesus-oliveira/)
 
-- Fluxo completo de criação e edição de quadros, listas e cards.
-- Integração das funcionalidades de tarefas com o backend.
-- Recursos de IA para apoio à organização e produtividade.
-
-### Colaboração e licença
-
-Sugestões podem ser enviadas por issue ou pull request. O projeto ainda não possui licença definida; consulte o autor antes de reutilizar o código fora das permissões padrão do GitHub.
-
-Desenvolvido por **Wildemberg de Jesus Oliveira (Will)** · [LinkedIn](https://www.linkedin.com/in/wildemberg-de-jesus-oliveira/)  
-Projeto iniciado em 2025 em outra conta GitHub e reunido neste perfil em uma cópia revisada.
+Projeto iniciado em 2025, recuperado e integrado em 2026. Sem licença de reutilização definida.
 
 </details>
