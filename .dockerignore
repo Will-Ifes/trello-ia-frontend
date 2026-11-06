@@ -1,10 +1,9 @@
 node_modules
 .next
 .git
-.vscode
-*.log
-coverage
 .env*
-Dockerfile*
-*.log
-*.md
+coverage
+test-results
+playwright-report
+.lint-*
+.audit-*

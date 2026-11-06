@@ -7,10 +7,7 @@ const fetcher = (url: string) =>
   });
 
 export function useUser() {
-  const { data, error, isLoading, mutate } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URL}/auth/me`,
-    fetcher,
-  );
+  const { data, error, isLoading, mutate } = useSWR('/api/auth/me', fetcher);
 
   return {
     user: data,

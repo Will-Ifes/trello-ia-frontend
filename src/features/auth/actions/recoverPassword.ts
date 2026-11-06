@@ -1,5 +1,7 @@
 'use server';
 
+import { API_URL } from '@/lib/api-config';
+
 import { RecoverPasswordFormData } from '../validation/recoverPassword.schema';
 import { FormState } from '@/types/formStates';
 
@@ -8,7 +10,7 @@ export async function recoverPasswordAction(
   formData: RecoverPasswordFormData,
 ): Promise<FormState> {
   try {
-    const res = await fetch(`${process.env.API_INTERNAL_URL}/auth/forgot-password`, {
+    const res = await fetch(`${API_URL}/auth/forgot-password`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: formData.email }),
